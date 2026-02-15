@@ -1,0 +1,84 @@
+{
+  "kind": "coverage_report",
+  "version": "1.0",
+  "generatedAt": "2026-02-15T20:07:04.522Z",
+  "sources": {
+    "buildRequest": true,
+    "implementationPlan": true
+  },
+  "requirements": {
+    "total": 3,
+    "implemented": 3,
+    "items": [
+      {
+        "id": "REQ-12",
+        "summary": "Remove all public-facing login/logout and profile-setup UX from the site layout so visitors cannot see or use any authentication controls (no login button, no logout button, no profile setup modal).",
+        "status": "implemented",
+        "plannedFiles": [
+          "frontend/src/components/layout/SiteLayout.tsx",
+          "frontend/src/components/auth/ProfileSetupModal.tsx",
+          "frontend/src/components/auth/LoginButton.tsx"
+        ],
+        "matchedFiles": [
+          "frontend/src/components/layout/SiteLayout.tsx",
+          "frontend/src/components/auth/ProfileSetupModal.tsx",
+          "frontend/src/components/auth/LoginButton.tsx"
+        ]
+      },
+      {
+        "id": "REQ-13",
+        "summary": "Keep the admin/editor pages protected so that only the site owner can access create/edit/publish/unpublish actions; non-owners must not be able to publish articles or upload images even if they discover admin routes.",
+        "status": "implemented",
+        "plannedFiles": [
+          "frontend/src/components/auth/RequireAdmin.tsx",
+          "frontend/src/pages/admin/AdminDashboardPage.tsx",
+          "frontend/src/pages/admin/ContentEditorPage.tsx",
+          "frontend/src/components/editor/ImageUploadPanel.tsx",
+          "frontend/src/components/admin/PublishToggle.tsx"
+        ],
+        "matchedFiles": [
+          "frontend/src/components/auth/RequireAdmin.tsx",
+          "frontend/src/pages/admin/AdminDashboardPage.tsx",
+          "frontend/src/pages/admin/ContentEditorPage.tsx",
+          "frontend/src/components/editor/ImageUploadPanel.tsx",
+          "frontend/src/components/admin/PublishToggle.tsx"
+        ]
+      },
+      {
+        "id": "REQ-14",
+        "summary": "Adjust admin gating UI text to reflect owner-only access and remove any implication that the site supports general user accounts (use English text).",
+        "status": "implemented",
+        "plannedFiles": [
+          "frontend/src/components/auth/RequireAdmin.tsx",
+          "frontend/src/pages/admin/AdminDashboardPage.tsx",
+          "frontend/src/pages/admin/ContentEditorPage.tsx"
+        ],
+        "matchedFiles": [
+          "frontend/src/components/auth/RequireAdmin.tsx",
+          "frontend/src/pages/admin/AdminDashboardPage.tsx",
+          "frontend/src/pages/admin/ContentEditorPage.tsx"
+        ]
+      }
+    ]
+  },
+  "changedFiles": [
+    "backend/main.mo",
+    "build-request.json",
+    "feature_evidence.json",
+    "frontend-file-summaries.txt",
+    "frontend-implementation-plan.json",
+    "frontend/src/components/admin/PublishToggle.tsx",
+    "frontend/src/components/auth/LoginButton.tsx",
+    "frontend/src/components/auth/ProfileSetupModal.tsx",
+    "frontend/src/components/auth/RequireAdmin.tsx",
+    "frontend/src/components/editor/BodyEditor.tsx",
+    "frontend/src/components/editor/ImageUploadPanel.tsx",
+    "frontend/src/components/layout/SiteLayout.tsx",
+    "frontend/src/pages/admin/AdminDashboardPage.tsx",
+    "frontend/src/pages/admin/ContentEditorPage.tsx",
+    "project_state.json",
+    "scratch/component-selection.json",
+    "spec.md",
+    "spec_vs_diff_report.json"
+  ]
+}

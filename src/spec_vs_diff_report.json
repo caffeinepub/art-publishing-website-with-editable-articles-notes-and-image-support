@@ -1,0 +1,76 @@
+{
+  "kind": "spec_vs_diff_report",
+  "version": "1.0",
+  "generatedAt": "2026-02-15T20:07:04.520Z",
+  "summary": "Public site header no longer shows login/logout controls and admin routes are wrapped in an owner-only guard with updated English messaging. However, profile-setup UX and user-profile backend APIs still appear to exist, and several editor/image-upload enhancements were added that were not requested.",
+  "missing_requirements": [
+    {
+      "id": "REQ-12",
+      "requirement": "Remove all public-facing login/logout and profile-setup UX (no login button, no logout button, no profile setup modal).",
+      "reason": "Although SiteLayout no longer renders a LoginButton, the ProfileSetupModal component is still present and described as showing on first login, and the LoginButton component (with Login/Logout labels) still exists. The diff summary does not provide evidence that ProfileSetupModal is no longer rendered anywhere.",
+      "evidence": [
+        "frontend/src/components/layout/SiteLayout.tsx",
+        "frontend/src/components/auth/ProfileSetupModal.tsx",
+        "frontend/src/components/auth/LoginButton.tsx",
+        "frontend-file-summaries.txt"
+      ]
+    },
+    {
+      "id": "REQ-13",
+      "requirement": "Ensure only the site owner can publish/unpublish and upload images; non-owners must be blocked even if they discover admin routes.",
+      "reason": "Frontend routes/pages are guarded via RequireAdmin and show an access-denied state, but the backend evidence is truncated and only shows checks for \"admin\" via AccessControl.isAdmin. The diff summary does not clearly demonstrate that image upload/storage is enforced as owner-only on the backend (or that \"admin\" maps strictly to the site owner).",
+      "evidence": [
+        "backend/main.mo (truncated)",
+        "frontend/src/components/auth/RequireAdmin.tsx",
+        "frontend/src/components/editor/ImageUploadPanel.tsx"
+      ]
+    }
+  ],
+  "hallucinated_features": [
+    {
+      "description": "User profile management API (get/save user profile) retained/added in backend, including permission checks for \"#user\" and profile storage map.",
+      "reason": "BuildRequest focuses on removing public login/profile setup UX and restricting publishing to owner; it explicitly discourages implying general user accounts. Profile management is not requested and conflicts with the intent to remove profile setup UX.",
+      "evidence": [
+        "backend/main.mo (truncated)"
+      ]
+    },
+    {
+      "description": "Profile setup modal that prompts new users to enter their name and create a user profile.",
+      "reason": "REQ-12 requires profile setup modal not be rendered on public pages (or at all). Keeping/working on this modal is contrary to the request.",
+      "evidence": [
+        "frontend/src/components/auth/ProfileSetupModal.tsx",
+        "frontend-file-summaries.txt"
+      ]
+    },
+    {
+      "description": "Editor enhancements: markdown helper text, image insertion workflow, upload progress UI, file type/size validation, and additional toast messaging for uploads.",
+      "reason": "Not requested by REQ-12/13/14; these are additional features beyond login/publishing restrictions and admin-gating text adjustments.",
+      "evidence": [
+        "frontend/src/components/editor/BodyEditor.tsx",
+        "frontend/src/components/editor/ImageUploadPanel.tsx"
+      ]
+    },
+    {
+      "description": "Footer content changes including a Caffeine.ai attribution link with UTM parameters and \"Built with\" message.",
+      "reason": "Not part of the requested authentication/publishing restriction changes.",
+      "evidence": [
+        "frontend/src/components/layout/SiteLayout.tsx"
+      ]
+    }
+  ],
+  "confidence": 0.62,
+  "changed_files": [
+    "backend/main.mo",
+    "frontend-file-summaries.txt",
+    "frontend/src/components/admin/PublishToggle.tsx",
+    "frontend/src/components/auth/LoginButton.tsx",
+    "frontend/src/components/auth/ProfileSetupModal.tsx",
+    "frontend/src/components/auth/RequireAdmin.tsx",
+    "frontend/src/components/editor/BodyEditor.tsx",
+    "frontend/src/components/editor/ImageUploadPanel.tsx",
+    "frontend/src/components/layout/SiteLayout.tsx",
+    "frontend/src/pages/admin/AdminDashboardPage.tsx",
+    "frontend/src/pages/admin/ContentEditorPage.tsx",
+    "project_state.json"
+  ]
+}

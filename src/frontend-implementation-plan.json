@@ -1,0 +1,94 @@
+{
+  "kind": "implementation_plan",
+  "version": "1.0",
+  "title": "Hide public authentication UI and clarify owner-only admin access",
+  "requirements": [
+    {
+      "id": "REQ-12",
+      "summary": "Remove all public-facing login/logout and profile-setup UI from the shared site layout so visitors never see authentication controls.",
+      "acceptanceCriteria": [
+        "The header navigation in SiteLayout no longer renders the LoginButton component.",
+        "ProfileSetupModal is not rendered on public pages (or at all).",
+        "No user-facing page shows buttons/links labeled \"Login\" or \"Logout\" to general visitors."
+      ],
+      "file_operations": [
+        {
+          "path": "frontend/src/components/layout/SiteLayout.tsx",
+          "operation": "modify",
+          "description": "Remove public auth UX from the layout: stop rendering LoginButton and ProfileSetupModal, and remove associated imports/state usage so the public header has no login/logout or profile setup controls."
+        },
+        {
+          "path": "frontend/src/components/auth/ProfileSetupModal.tsx",
+          "operation": "delete",
+          "description": "Delete the profile setup modal to ensure it cannot be rendered anywhere in the public experience (and to remove any implied public account onboarding)."
+        },
+        {
+          "path": "frontend/src/components/auth/LoginButton.tsx",
+          "operation": "delete",
+          "description": "Delete the public login/logout button component to prevent any accidental rendering of login/logout controls in public UI."
+        }
+      ]
+    },
+    {
+      "id": "REQ-13",
+      "summary": "Ensure admin/editor UI remains inaccessible to non-owners and that unauthorized users cannot reach publishing or image-upload controls via admin routes.",
+      "acceptanceCriteria": [
+        "All backend content-mutation methods (createArticle, updateArticle, publishArticle, unpublishArticle) continue to reject non-owner callers with an unauthorized error.",
+        "Admin UI routes (/admin, /admin/articles/new, /admin/articles/:id/edit) remain inaccessible to non-owners (they see an access denied / authentication required experience and cannot reach editing controls).",
+        "Image upload functionality used by the editor cannot successfully upload/store images for non-owner callers."
+      ],
+      "file_operations": [
+        {
+          "path": "frontend/src/components/auth/RequireAdmin.tsx",
+          "operation": "modify",
+          "description": "Harden admin-route gating UX so non-owners cannot reach admin children under any condition; ensure the unauthenticated and non-admin states render only an access-required/denied screen (no editing controls). Also remove any \"Login/Logout\" wording from UI shown to visitors."
+        },
+        {
+          "path": "frontend/src/pages/admin/AdminDashboardPage.tsx",
+          "operation": "modify",
+          "description": "Confirm the admin dashboard remains fully wrapped by RequireAdmin and does not render any management controls outside the RequireAdmin boundary."
+        },
+        {
+          "path": "frontend/src/pages/admin/ContentEditorPage.tsx",
+          "operation": "modify",
+          "description": "Ensure all create/edit UI (including save and cover image interactions) stays behind RequireAdmin, and add defensive UI disabling/guarding so editor actions and image selection/upload cannot be invoked unless the caller is confirmed admin."
+        },
+        {
+          "path": "frontend/src/components/editor/ImageUploadPanel.tsx",
+          "operation": "modify",
+          "description": "Add a defensive authorization-aware UX for uploads (e.g., disable upload/remove interactions when the surrounding editor is not authorized, and surface unauthorized failures cleanly) so non-owner callers cannot successfully proceed through an image upload flow even if they discover admin routes. Verify the blob-storage component's usage instructions before implementing."
+        },
+        {
+          "path": "frontend/src/components/admin/PublishToggle.tsx",
+          "operation": "modify",
+          "description": "Improve handling of unauthorized publish/unpublish failures (show a clear owner-only error message on authorization failures and avoid implying general users can publish)."
+        }
+      ]
+    },
+    {
+      "id": "REQ-14",
+      "summary": "Update admin gating and access-denied messaging to clearly indicate owner-only access (English), with no implications of general user accounts or profile creation.",
+      "acceptanceCriteria": [
+        "Admin guard screens/messages refer to \"Owner access\" or \"Admin access\" and do not instruct general visitors to create a profile.",
+        "All user-facing authentication/access-denied strings shown by admin gating components are in English."
+      ],
+      "file_operations": [
+        {
+          "path": "frontend/src/components/auth/RequireAdmin.tsx",
+          "operation": "modify",
+          "description": "Rewrite all admin-guard strings to owner-only/admin-only language in English (e.g., \"Owner access only\"), removing any prompts about profiles or general accounts and removing any \"Login\"/\"Logout\" labels from the UI."
+        },
+        {
+          "path": "frontend/src/pages/admin/AdminDashboardPage.tsx",
+          "operation": "modify",
+          "description": "Adjust admin dashboard headings/subtext as needed so the admin area reads as owner-only management (English) and does not imply a multi-user account system."
+        },
+        {
+          "path": "frontend/src/pages/admin/ContentEditorPage.tsx",
+          "operation": "modify",
+          "description": "Adjust any editor-page user-facing access-related text/toasts to reflect owner-only admin access (English) and remove any implications of general user profiles/accounts."
+        }
+      ]
+    }
+  ]
+}

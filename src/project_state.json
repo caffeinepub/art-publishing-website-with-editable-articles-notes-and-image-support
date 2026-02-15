@@ -1,0 +1,155 @@
+{
+  "schemaVersion": "1.0.0",
+  "projectStateVersion": 7,
+  "summary": "Website for publishing articles (no notes), with an easy editor for updating content and support for adding images; remove public login and ensure only the site owner can publish.",
+  "architectural_notes": [
+    "Scope change: remove the Notes content type from the website; focus on Articles only (public browsing/reading and admin editing).",
+    "Scope/behavior change: remove public login/auth; only the site owner can access publishing/editor tools, and visitors can only view published Articles."
+  ],
+  "known_issues": [],
+  "isFixRequest": false,
+  "existing_features": [
+    {
+      "id": "feature-create-a-public-website-that-lets-visitors-browse-and-read-published-content-separated-into-two-content-types-articles-and-notes-each-with-its-own-listing-page-and-detail-read-page",
+      "title": "Create a public website that lets visitors browse and read published content, separated into two content types: Articles and Notes, each with its own listing page and detail (read) page.",
+      "reqIds": [
+        "REQ-1"
+      ],
+      "version": 1
+    },
+    {
+      "id": "feature-provide-an-authenticated-editor-admin-experience-that-allows-the-site-owner-to-easily-create-edit-and-update-articles-and-notes-from-the-browser-simple-cms",
+      "title": "Provide an authenticated editor/admin experience that allows the site owner to easily create, edit, and update Articles and Notes from the browser (simple CMS).",
+      "reqIds": [
+        "REQ-3"
+      ],
+      "version": 1
+    },
+    {
+      "id": "feature-add-image-support-so-the-admin-can-upload-images-and-embed-them-in-articles-notes-images-must-display-correctly-on-the-public-pages",
+      "title": "Add image support so the admin can upload images and embed them in Articles/Notes; images must display correctly on the public pages.",
+      "reqIds": [
+        "REQ-4"
+      ],
+      "version": 1
+    },
+    {
+      "id": "feature-add-basic-content-management-conveniences-draft-published-status-and-a-simple-publish-unpublish-control-for-articles-and-notes-with-only-published-items-visible-to-the-public",
+      "title": "Add basic content management conveniences: draft/published status and a simple publish/unpublish control for Articles and Notes, with only published items visible to the public.",
+      "reqIds": [
+        "REQ-5"
+      ],
+      "version": 1
+    },
+    {
+      "id": "feature-apply-a-cohesive-visual-theme-and-layout-appropriate-for-an-art-focused-writing-site-distinct-typography-generous-whitespace-and-a-neutral-gallery-like-color-palette-and-use-it-consistently-across-public-pages-and-the-editor",
+      "title": "Apply a cohesive visual theme and layout appropriate for an art-focused writing site (distinct typography, generous whitespace, and a neutral, gallery-like color palette), and use it consistently across public pages and the editor.",
+      "reqIds": [
+        "REQ-6"
+      ],
+      "version": 1
+    },
+    {
+      "id": "feature-generate-and-include-required-static-brand-visual-assets-and-render-them-in-the-ui-from-frontend-public-assets-generated-no-backend-image-routing-for-these-static-assets",
+      "title": "Generate and include required static brand/visual assets, and render them in the UI from frontend/public/assets/generated (no backend image routing for these static assets).",
+      "reqIds": [
+        "REQ-7"
+      ],
+      "version": 1
+    },
+    {
+      "id": "feature-remove-all-public-facing-notes-pages-and-entry-points-so-visitors-can-only-browse-and-read-articles",
+      "title": "Remove all public-facing Notes pages and entry points so visitors can only browse and read Articles.",
+      "reqIds": [
+        "REQ-8"
+      ],
+      "version": 1
+    },
+    {
+      "id": "feature-remove-notes-from-the-admin-cms-so-admins-can-only-create-edit-and-publish-articles",
+      "title": "Remove Notes from the admin CMS so admins can only create, edit, and publish Articles.",
+      "reqIds": [
+        "REQ-9"
+      ],
+      "version": 1
+    },
+    {
+      "id": "feature-update-frontend-data-hooks-and-query-invalidation-to-remove-notes-queries-and-ensure-admin-public-data-fetching-only-targets-articles",
+      "title": "Update frontend data hooks and query invalidation to remove Notes queries and ensure admin/public data fetching only targets Articles.",
+      "reqIds": [
+        "REQ-11"
+      ],
+      "version": 1
+    },
+    {
+      "id": "feature-remove-all-public-facing-login-logout-and-profile-setup-ux-from-the-site-layout-so-visitors-cannot-see-or-use-any-authentication-controls-no-login-button-no-logout-button-no-profile-setup-modal",
+      "title": "Remove all public-facing login/logout and profile-setup UX from the site layout so visitors cannot see or use any authentication controls (no login button, no logout button, no profile setup modal).",
+      "reqIds": [
+        "REQ-12"
+      ],
+      "version": 1
+    },
+    {
+      "id": "feature-keep-the-admin-editor-pages-protected-so-that-only-the-site-owner-can-access-create-edit-publish-unpublish-actions-non-owners-must-not-be-able-to-publish-articles-or-upload-images-even-if-they-discover-admin-routes",
+      "title": "Keep the admin/editor pages protected so that only the site owner can access create/edit/publish/unpublish actions; non-owners must not be able to publish articles or upload images even if they discover admin routes.",
+      "reqIds": [
+        "REQ-13"
+      ],
+      "version": 1
+    },
+    {
+      "id": "feature-adjust-admin-gating-ui-text-to-reflect-owner-only-access-and-remove-any-implication-that-the-site-supports-general-user-accounts-use-english-text",
+      "title": "Adjust admin gating UI text to reflect owner-only access and remove any implication that the site supports general user accounts (use English text).",
+      "reqIds": [
+        "REQ-14"
+      ],
+      "version": 1
+    }
+  ],
+  "new_feature_requests": [
+    {
+      "id": "AR-1",
+      "summary": "Publish articles on the website (create/read views for articles).",
+      "reqIds": [],
+      "status": "pending"
+    },
+    {
+      "id": "AR-3",
+      "summary": "Provide an easy way to edit and update articles/notes (simple CMS/editor).",
+      "reqIds": [],
+      "status": "pending"
+    },
+    {
+      "id": "AR-4",
+      "summary": "Support adding and displaying images in articles/notes.",
+      "reqIds": [],
+      "status": "pending"
+    },
+    {
+      "id": "AR-6",
+      "summary": "Implement backend data models and persistence for Articles and Notes, including fields for: id, title, body, createdAt, updatedAt, and an optional cover image reference.",
+      "reqIds": [
+        "REQ-2"
+      ],
+      "status": "pending"
+    },
+    {
+      "id": "AR-9",
+      "summary": "Disable Notes support in the backend API so Notes cannot be created/updated and cannot be returned from public queries.",
+      "reqIds": [
+        "REQ-10"
+      ],
+      "status": "pending"
+    },
+    {
+      "id": "AR-10",
+      "summary": "Remove the login system/public authentication and restrict publishing/admin editing access to the site owner only (visitors can only read published articles).",
+      "reqIds": [],
+      "status": "pending"
+    }
+  ],
+  "gameProjectType": "none",
+  "projectName": "Art publishing website with editable articles/notes and image support",
+  "clarification_mode": "instant",
+  "clarification_rounds": 0
+}

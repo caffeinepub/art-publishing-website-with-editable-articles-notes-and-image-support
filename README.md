@@ -1,2 +1,3 @@
-# art-publishing-website-with-editable-articles-notes-and-image-support
-Exported from Caffeine project: Art publishing website with editable articles/notes and image support
+## 
+
+To run app build and run docker image: `docker build -t app . docker run -it --network host app`
