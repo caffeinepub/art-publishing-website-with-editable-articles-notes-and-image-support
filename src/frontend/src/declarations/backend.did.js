@@ -39,7 +39,6 @@ export const Article = IDL.Record({
   'coverImage' : IDL.Opt(ExternalBlob),
   'updatedAt' : Time,
 });
-export const UserProfile = IDL.Record({ 'name' : IDL.Text });
 
 export const idlService = IDL.Service({
   '_caffeineStorageBlobIsLive' : IDL.Func(
@@ -71,25 +70,30 @@ export const idlService = IDL.Service({
   '_initializeAccessControlWithSecret' : IDL.Func([IDL.Text], [], []),
   'assignCallerUserRole' : IDL.Func([IDL.Principal, UserRole], [], []),
   'createArticle' : IDL.Func(
-      [IDL.Text, IDL.Text, IDL.Opt(ExternalBlob)],
+      [IDL.Text, IDL.Text, IDL.Opt(ExternalBlob), IDL.Opt(IDL.Text)],
       [Article],
       [],
     ),
-  'getArticleById' : IDL.Func([IDL.Text], [IDL.Opt(Article)], ['query']),
-  'getCallerUserProfile' : IDL.Func([], [IDL.Opt(UserProfile)], ['query']),
-  'getCallerUserRole' : IDL.Func([], [UserRole], ['query']),
-  'getPublishedArticles' : IDL.Func([], [IDL.Vec(Article)], ['query']),
-  'getUserProfile' : IDL.Func(
-      [IDL.Principal],
-      [IDL.Opt(UserProfile)],
+  'getAllArticles' : IDL.Func(
+      [IDL.Opt(IDL.Text)],
+      [IDL.Vec(Article)],
       ['query'],
     ),
+  'getArticleById' : IDL.Func(
+      [IDL.Text, IDL.Opt(IDL.Text)],
+      [IDL.Opt(Article)],
+      ['query'],
+    ),
+  'getCallerUserRole' : IDL.Func([], [UserRole], ['query']),
+  'getPublishedArticles' : IDL.Func([], [IDL.Vec(Article)], ['query']),
   'isCallerAdmin' : IDL.Func([], [IDL.Bool], ['query']),
-  'publishArticle' : IDL.Func([IDL.Text], [Article], []),
-  'saveCallerUserProfile' : IDL.Func([UserProfile], [], []),
-  'unpublishArticle' : IDL.Func([IDL.Text], [Article], []),
+  'login' : IDL.Func([IDL.Text, IDL.Text], [IDL.Text], []),
+  'logout' : IDL.Func([IDL.Text], [], []),
+  'publishArticle' : IDL.Func([IDL.Text, IDL.Opt(IDL.Text)], [Article], []),
+  'resetDefaultAdminCredential' : IDL.Func([], [], []),
+  'unpublishArticle' : IDL.Func([IDL.Text, IDL.Opt(IDL.Text)], [Article], []),
   'updateArticle' : IDL.Func(
-      [IDL.Text, IDL.Text, IDL.Text, IDL.Opt(ExternalBlob)],
+      [IDL.Text, IDL.Text, IDL.Text, IDL.Opt(ExternalBlob), IDL.Opt(IDL.Text)],
       [Article],
       [],
     ),
@@ -129,7 +133,6 @@ export const idlFactory = ({ IDL }) => {
     'coverImage' : IDL.Opt(ExternalBlob),
     'updatedAt' : Time,
   });
-  const UserProfile = IDL.Record({ 'name' : IDL.Text });
   
   return IDL.Service({
     '_caffeineStorageBlobIsLive' : IDL.Func(
@@ -161,25 +164,36 @@ export const idlFactory = ({ IDL }) => {
     '_initializeAccessControlWithSecret' : IDL.Func([IDL.Text], [], []),
     'assignCallerUserRole' : IDL.Func([IDL.Principal, UserRole], [], []),
     'createArticle' : IDL.Func(
-        [IDL.Text, IDL.Text, IDL.Opt(ExternalBlob)],
+        [IDL.Text, IDL.Text, IDL.Opt(ExternalBlob), IDL.Opt(IDL.Text)],
         [Article],
         [],
       ),
-    'getArticleById' : IDL.Func([IDL.Text], [IDL.Opt(Article)], ['query']),
-    'getCallerUserProfile' : IDL.Func([], [IDL.Opt(UserProfile)], ['query']),
-    'getCallerUserRole' : IDL.Func([], [UserRole], ['query']),
-    'getPublishedArticles' : IDL.Func([], [IDL.Vec(Article)], ['query']),
-    'getUserProfile' : IDL.Func(
-        [IDL.Principal],
-        [IDL.Opt(UserProfile)],
+    'getAllArticles' : IDL.Func(
+        [IDL.Opt(IDL.Text)],
+        [IDL.Vec(Article)],
         ['query'],
       ),
+    'getArticleById' : IDL.Func(
+        [IDL.Text, IDL.Opt(IDL.Text)],
+        [IDL.Opt(Article)],
+        ['query'],
+      ),
+    'getCallerUserRole' : IDL.Func([], [UserRole], ['query']),
+    'getPublishedArticles' : IDL.Func([], [IDL.Vec(Article)], ['query']),
     'isCallerAdmin' : IDL.Func([], [IDL.Bool], ['query']),
-    'publishArticle' : IDL.Func([IDL.Text], [Article], []),
-    'saveCallerUserProfile' : IDL.Func([UserProfile], [], []),
-    'unpublishArticle' : IDL.Func([IDL.Text], [Article], []),
+    'login' : IDL.Func([IDL.Text, IDL.Text], [IDL.Text], []),
+    'logout' : IDL.Func([IDL.Text], [], []),
+    'publishArticle' : IDL.Func([IDL.Text, IDL.Opt(IDL.Text)], [Article], []),
+    'resetDefaultAdminCredential' : IDL.Func([], [], []),
+    'unpublishArticle' : IDL.Func([IDL.Text, IDL.Opt(IDL.Text)], [Article], []),
     'updateArticle' : IDL.Func(
-        [IDL.Text, IDL.Text, IDL.Text, IDL.Opt(ExternalBlob)],
+        [
+          IDL.Text,
+          IDL.Text,
+          IDL.Text,
+          IDL.Opt(ExternalBlob),
+          IDL.Opt(IDL.Text),
+        ],
         [Article],
         [],
       ),

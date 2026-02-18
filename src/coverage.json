@@ -1,46 +1,65 @@
 {
   "kind": "coverage_report",
   "version": "1.0",
-  "generatedAt": "2026-02-15T20:20:41.907Z",
+  "generatedAt": "2026-02-18T12:04:29.227Z",
   "sources": {
     "buildRequest": true,
     "implementationPlan": true
   },
   "requirements": {
-    "total": 2,
+    "total": 4,
     "implemented": 1,
     "items": [
       {
-        "id": "REQ-15",
-        "summary": "Implement a one-time backend “owner bootstrap” mechanism that allows the first authenticated Internet Identity principal to claim admin/owner access when no admin has been set yet, and prevents further claims once an admin exists.",
+        "id": "REQ-1",
+        "summary": "Update the backend admin credential model to store and verify a single admin username + password pair (not password-only), and update the login API to require both username and password.",
         "status": "unknown",
         "plannedFiles": [],
         "matchedFiles": []
       },
       {
-        "id": "REQ-16",
-        "summary": "Update the /admin access flow in the frontend so that a site owner can sign in with Internet Identity and (if needed) claim owner/admin access, without introducing any public username/password UI.",
+        "id": "REQ-2",
+        "summary": "Implement a backend admin-credential reset using the user-provided values: set admin username to \"adminankit\" and admin password to \"ankits-0812\" via the existing credential initialization/update mechanism, ensuring updates require a valid admin session when credentials already exist.",
+        "status": "unknown",
+        "plannedFiles": [],
+        "matchedFiles": []
+      },
+      {
+        "id": "REQ-3",
+        "summary": "Persist admin credentials across canister upgrades by storing them in stable state and adding a conditional migration to preserve any existing password-only credential data (if present) by mapping it into the new username+password credential structure.",
+        "status": "unknown",
+        "plannedFiles": [],
+        "matchedFiles": []
+      },
+      {
+        "id": "REQ-4",
+        "summary": "Update the frontend admin login UI and session hook to accept a username and password, and call the updated backend login API accordingly. All user-facing text must be in English.",
         "status": "implemented",
         "plannedFiles": [
-          "frontend/src/backend.d.ts",
-          "frontend/src/hooks/useAdminContent.ts",
-          "frontend/src/components/auth/LoginButton.tsx",
+          "frontend/src/components/auth/AdminLoginForm.tsx",
+          "frontend/src/hooks/useAdminSession.ts",
           "frontend/src/components/auth/RequireAdmin.tsx"
         ],
         "matchedFiles": [
-          "frontend/src/components/auth/LoginButton.tsx",
-          "frontend/src/components/auth/RequireAdmin.tsx"
+          "frontend/src/components/auth/AdminLoginForm.tsx",
+          "frontend/src/hooks/useAdminSession.ts"
         ]
       }
     ]
   },
   "changedFiles": [
+    "backend/main.mo",
+    "backend/migration.mo",
     "build-request.json",
     "feature_evidence.json",
     "frontend-file-summaries.txt",
     "frontend-implementation-plan.json",
-    "frontend/src/components/auth/LoginButton.tsx",
-    "frontend/src/components/auth/RequireAdmin.tsx",
+    "frontend/src/backend.d.ts",
+    "frontend/src/backend.ts",
+    "frontend/src/components/auth/AdminLoginForm.tsx",
+    "frontend/src/declarations/backend.did.d.ts",
+    "frontend/src/declarations/backend.did.js",
+    "frontend/src/hooks/useAdminSession.ts",
     "project_state.json",
     "scratch/component-selection.json",
     "spec.md",

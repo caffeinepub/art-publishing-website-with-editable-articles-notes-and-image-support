@@ -22,7 +22,7 @@ export function useGetArticleById(id: string) {
     queryKey: ['article', id],
     queryFn: async () => {
       if (!actor || !id) return null;
-      return actor.getArticleById(id);
+      return actor.getArticleById(id, null);
     },
     enabled: !!actor && !isFetching && !!id,
   });

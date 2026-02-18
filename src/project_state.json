@@ -1,116 +1,18 @@
 {
   "schemaVersion": "1.0.0",
-  "projectStateVersion": 9,
-  "summary": "Website for publishing articles (no notes), with an easy editor for updating content and support for adding images; remove public login and ensure only the site owner can publish.",
+  "projectStateVersion": 3,
+  "summary": "Project includes an admin login where credentials are user-defined and can be reset by specifying a new admin username and password.",
   "architectural_notes": [
-    "Scope change: remove the Notes content type from the website; focus on Articles only (public browsing/reading and admin editing).",
-    "Scope/behavior change: remove public login/auth; only the site owner can access publishing/editor tools, and visitors can only view published Articles.",
-    "Owner-only admin access should be secured via explicit credentials (admin user ID + password) for /admin, while keeping all auth controls hidden from public pages."
+    "Admin login credentials are created by the user and can be reset by setting a new admin username/password."
   ],
   "known_issues": [],
   "isFixRequest": false,
   "existing_features": [
     {
-      "id": "feature-create-a-public-website-that-lets-visitors-browse-and-read-published-content-separated-into-two-content-types-articles-and-notes-each-with-its-own-listing-page-and-detail-read-page",
-      "title": "Create a public website that lets visitors browse and read published content, separated into two content types: Articles and Notes, each with its own listing page and detail (read) page.",
-      "reqIds": [
-        "REQ-1"
-      ],
-      "version": 1
-    },
-    {
-      "id": "feature-provide-an-authenticated-editor-admin-experience-that-allows-the-site-owner-to-easily-create-edit-and-update-articles-and-notes-from-the-browser-simple-cms",
-      "title": "Provide an authenticated editor/admin experience that allows the site owner to easily create, edit, and update Articles and Notes from the browser (simple CMS).",
-      "reqIds": [
-        "REQ-3"
-      ],
-      "version": 1
-    },
-    {
-      "id": "feature-add-image-support-so-the-admin-can-upload-images-and-embed-them-in-articles-notes-images-must-display-correctly-on-the-public-pages",
-      "title": "Add image support so the admin can upload images and embed them in Articles/Notes; images must display correctly on the public pages.",
+      "id": "feature-update-the-frontend-admin-login-ui-and-session-hook-to-accept-a-username-and-password-and-call-the-updated-backend-login-api-accordingly-all-user-facing-text-must-be-in-english",
+      "title": "Update the frontend admin login UI and session hook to accept a username and password, and call the updated backend login API accordingly. All user-facing text must be in English.",
       "reqIds": [
         "REQ-4"
-      ],
-      "version": 1
-    },
-    {
-      "id": "feature-add-basic-content-management-conveniences-draft-published-status-and-a-simple-publish-unpublish-control-for-articles-and-notes-with-only-published-items-visible-to-the-public",
-      "title": "Add basic content management conveniences: draft/published status and a simple publish/unpublish control for Articles and Notes, with only published items visible to the public.",
-      "reqIds": [
-        "REQ-5"
-      ],
-      "version": 1
-    },
-    {
-      "id": "feature-apply-a-cohesive-visual-theme-and-layout-appropriate-for-an-art-focused-writing-site-distinct-typography-generous-whitespace-and-a-neutral-gallery-like-color-palette-and-use-it-consistently-across-public-pages-and-the-editor",
-      "title": "Apply a cohesive visual theme and layout appropriate for an art-focused writing site (distinct typography, generous whitespace, and a neutral, gallery-like color palette), and use it consistently across public pages and the editor.",
-      "reqIds": [
-        "REQ-6"
-      ],
-      "version": 1
-    },
-    {
-      "id": "feature-generate-and-include-required-static-brand-visual-assets-and-render-them-in-the-ui-from-frontend-public-assets-generated-no-backend-image-routing-for-these-static-assets",
-      "title": "Generate and include required static brand/visual assets, and render them in the UI from frontend/public/assets/generated (no backend image routing for these static assets).",
-      "reqIds": [
-        "REQ-7"
-      ],
-      "version": 1
-    },
-    {
-      "id": "feature-remove-all-public-facing-notes-pages-and-entry-points-so-visitors-can-only-browse-and-read-articles",
-      "title": "Remove all public-facing Notes pages and entry points so visitors can only browse and read Articles.",
-      "reqIds": [
-        "REQ-8"
-      ],
-      "version": 1
-    },
-    {
-      "id": "feature-remove-notes-from-the-admin-cms-so-admins-can-only-create-edit-and-publish-articles",
-      "title": "Remove Notes from the admin CMS so admins can only create, edit, and publish Articles.",
-      "reqIds": [
-        "REQ-9"
-      ],
-      "version": 1
-    },
-    {
-      "id": "feature-update-frontend-data-hooks-and-query-invalidation-to-remove-notes-queries-and-ensure-admin-public-data-fetching-only-targets-articles",
-      "title": "Update frontend data hooks and query invalidation to remove Notes queries and ensure admin/public data fetching only targets Articles.",
-      "reqIds": [
-        "REQ-11"
-      ],
-      "version": 1
-    },
-    {
-      "id": "feature-remove-all-public-facing-login-logout-and-profile-setup-ux-from-the-site-layout-so-visitors-cannot-see-or-use-any-authentication-controls-no-login-button-no-logout-button-no-profile-setup-modal",
-      "title": "Remove all public-facing login/logout and profile-setup UX from the site layout so visitors cannot see or use any authentication controls (no login button, no logout button, no profile setup modal).",
-      "reqIds": [
-        "REQ-12"
-      ],
-      "version": 1
-    },
-    {
-      "id": "feature-keep-the-admin-editor-pages-protected-so-that-only-the-site-owner-can-access-create-edit-publish-unpublish-actions-non-owners-must-not-be-able-to-publish-articles-or-upload-images-even-if-they-discover-admin-routes",
-      "title": "Keep the admin/editor pages protected so that only the site owner can access create/edit/publish/unpublish actions; non-owners must not be able to publish articles or upload images even if they discover admin routes.",
-      "reqIds": [
-        "REQ-13"
-      ],
-      "version": 1
-    },
-    {
-      "id": "feature-adjust-admin-gating-ui-text-to-reflect-owner-only-access-and-remove-any-implication-that-the-site-supports-general-user-accounts-use-english-text",
-      "title": "Adjust admin gating UI text to reflect owner-only access and remove any implication that the site supports general user accounts (use English text).",
-      "reqIds": [
-        "REQ-14"
-      ],
-      "version": 1
-    },
-    {
-      "id": "feature-update-the-admin-access-flow-in-the-frontend-so-that-a-site-owner-can-sign-in-with-internet-identity-and-if-needed-claim-owner-admin-access-without-introducing-any-public-username-password-ui",
-      "title": "Update the /admin access flow in the frontend so that a site owner can sign in with Internet Identity and (if needed) claim owner/admin access, without introducing any public username/password UI.",
-      "reqIds": [
-        "REQ-16"
       ],
       "version": 1
     }
@@ -118,61 +20,36 @@
   "new_feature_requests": [
     {
       "id": "AR-1",
-      "summary": "Publish articles on the website (create/read views for articles).",
+      "summary": "Support resetting admin login credentials (set new admin username and password)",
       "reqIds": [],
+      "status": "in_progress"
+    },
+    {
+      "id": "AR-2",
+      "summary": "Update the backend admin credential model to store and verify a single admin username + password pair (not password-only), and update the login API to require both username and password.",
+      "reqIds": [
+        "REQ-1"
+      ],
       "status": "pending"
     },
     {
       "id": "AR-3",
-      "summary": "Provide an easy way to edit and update articles/notes (simple CMS/editor).",
-      "reqIds": [],
-      "status": "pending"
-    },
-    {
-      "id": "AR-4",
-      "summary": "Support adding and displaying images in articles/notes.",
-      "reqIds": [],
-      "status": "pending"
-    },
-    {
-      "id": "AR-6",
-      "summary": "Implement backend data models and persistence for Articles and Notes, including fields for: id, title, body, createdAt, updatedAt, and an optional cover image reference.",
+      "summary": "Implement a backend admin-credential reset using the user-provided values: set admin username to \"adminankit\" and admin password to \"ankits-0812\" via the existing credential initialization/update mechanism, ensuring updates require a valid admin session when credentials already exist.",
       "reqIds": [
         "REQ-2"
       ],
       "status": "pending"
     },
     {
-      "id": "AR-9",
-      "summary": "Disable Notes support in the backend API so Notes cannot be created/updated and cannot be returned from public queries.",
+      "id": "AR-4",
+      "summary": "Persist admin credentials across canister upgrades by storing them in stable state and adding a conditional migration to preserve any existing password-only credential data (if present) by mapping it into the new username+password credential structure.",
       "reqIds": [
-        "REQ-10"
-      ],
-      "status": "pending"
-    },
-    {
-      "id": "AR-10",
-      "summary": "Remove the login system/public authentication and restrict publishing/admin editing access to the site owner only (visitors can only read published articles).",
-      "reqIds": [],
-      "status": "pending"
-    },
-    {
-      "id": "AR-11",
-      "summary": "Add an owner/admin login mechanism (admin user ID + password) to access the /admin editor, while keeping the public site free of authentication UI.",
-      "reqIds": [],
-      "status": "pending"
-    },
-    {
-      "id": "AR-12",
-      "summary": "Implement a one-time backend “owner bootstrap” mechanism that allows the first authenticated Internet Identity principal to claim admin/owner access when no admin has been set yet, and prevents further claims once an admin exists.",
-      "reqIds": [
-        "REQ-15"
+        "REQ-3"
       ],
       "status": "pending"
     }
   ],
-  "gameProjectType": "none",
-  "projectName": "Art publishing website with editable articles/notes and image support",
+  "projectName": "My Collection",
   "clarification_mode": "instant",
   "clarification_rounds": 0
 }

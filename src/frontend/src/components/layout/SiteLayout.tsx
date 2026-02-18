@@ -1,18 +1,23 @@
 import { Link, useRouterState } from '@tanstack/react-router';
 import { Button } from '@/components/ui/button';
-import { useInternetIdentity } from '../../hooks/useInternetIdentity';
-import { useIsCallerAdmin } from '../../hooks/useAdminContent';
-import { Settings } from 'lucide-react';
+import { useAdminSession } from '../../hooks/useAdminSession';
+import { Settings, LogOut } from 'lucide-react';
+import { useQueryClient } from '@tanstack/react-query';
 
 interface SiteLayoutProps {
   children: React.ReactNode;
 }
 
 export default function SiteLayout({ children }: SiteLayoutProps) {
-  const { identity } = useInternetIdentity();
-  const { data: isAdmin } = useIsCallerAdmin();
+  const { isAuthenticated, logout } = useAdminSession();
+  const queryClient = useQueryClient();
   const router = useRouterState();
   const currentPath = router.location.pathname;
+
+  const handleLogout = async () => {
+    await logout();
+    queryClient.clear();
+  };
 
   return (
     <div className="min-h-screen flex flex-col">
@@ -37,16 +42,22 @@ export default function SiteLayout({ children }: SiteLayoutProps) {
                   Articles
                 </Button>
               </Link>
-              {identity && isAdmin && (
-                <Link to="/admin">
-                  <Button
-                    variant="ghost"
-                    className={currentPath.startsWith('/admin') ? 'bg-accent' : ''}
-                  >
-                    <Settings className="w-4 h-4 mr-2" />
-                    Admin
+              {isAuthenticated && (
+                <>
+                  <Link to="/admin">
+                    <Button
+                      variant="ghost"
+                      className={currentPath.startsWith('/admin') ? 'bg-accent' : ''}
+                    >
+                      <Settings className="w-4 h-4 mr-2" />
+                      Admin
+                    </Button>
+                  </Link>
+                  <Button variant="outline" size="sm" onClick={handleLogout}>
+                    <LogOut className="w-4 h-4 mr-2" />
+                    Logout
                   </Button>
-                </Link>
+                </>
               )}
             </nav>
           </div>

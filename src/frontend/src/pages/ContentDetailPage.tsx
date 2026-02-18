@@ -5,15 +5,13 @@ import { Skeleton } from '@/components/ui/skeleton';
 import { Badge } from '@/components/ui/badge';
 import { ArrowLeft, Calendar, Edit } from 'lucide-react';
 import { Button } from '@/components/ui/button';
-import { useInternetIdentity } from '../hooks/useInternetIdentity';
-import { useIsCallerAdmin } from '../hooks/useAdminContent';
+import { useAdminSession } from '../hooks/useAdminSession';
 
 export default function ContentDetailPage() {
   const { id } = useParams({ strict: false });
   const navigate = useNavigate();
   const { data: article, isLoading } = useGetArticleById(id as string);
-  const { identity } = useInternetIdentity();
-  const { data: isAdmin } = useIsCallerAdmin();
+  const { isAuthenticated } = useAdminSession();
 
   const formatDate = (timestamp: bigint) => {
     const date = new Date(Number(timestamp) / 1000000);
@@ -65,7 +63,7 @@ export default function ContentDetailPage() {
           <Badge variant={article.status === 'published' ? 'default' : 'secondary'}>
             {article.status}
           </Badge>
-          {isAdmin && identity && (
+          {isAuthenticated && (
             <Button variant="outline" size="sm" onClick={handleEdit}>
               <Edit className="w-4 h-4 mr-2" />
               Edit

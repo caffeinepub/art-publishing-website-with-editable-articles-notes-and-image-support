@@ -23,7 +23,6 @@ export type ContentStatus = { 'published' : null } |
   { 'draft' : null };
 export type ExternalBlob = Uint8Array;
 export type Time = bigint;
-export interface UserProfile { 'name' : string }
 export type UserRole = { 'admin' : null } |
   { 'user' : null } |
   { 'guest' : null };
@@ -56,18 +55,27 @@ export interface _SERVICE {
   '_caffeineStorageUpdateGatewayPrincipals' : ActorMethod<[], undefined>,
   '_initializeAccessControlWithSecret' : ActorMethod<[string], undefined>,
   'assignCallerUserRole' : ActorMethod<[Principal, UserRole], undefined>,
-  'createArticle' : ActorMethod<[string, string, [] | [ExternalBlob]], Article>,
-  'getArticleById' : ActorMethod<[string], [] | [Article]>,
-  'getCallerUserProfile' : ActorMethod<[], [] | [UserProfile]>,
+  'createArticle' : ActorMethod<
+    [string, string, [] | [ExternalBlob], [] | [string]],
+    Article
+  >,
+  'getAllArticles' : ActorMethod<[[] | [string]], Array<Article>>,
+  'getArticleById' : ActorMethod<[string, [] | [string]], [] | [Article]>,
   'getCallerUserRole' : ActorMethod<[], UserRole>,
   'getPublishedArticles' : ActorMethod<[], Array<Article>>,
-  'getUserProfile' : ActorMethod<[Principal], [] | [UserProfile]>,
   'isCallerAdmin' : ActorMethod<[], boolean>,
-  'publishArticle' : ActorMethod<[string], Article>,
-  'saveCallerUserProfile' : ActorMethod<[UserProfile], undefined>,
-  'unpublishArticle' : ActorMethod<[string], Article>,
+  'login' : ActorMethod<[string, string], string>,
+  'logout' : ActorMethod<[string], undefined>,
+  'publishArticle' : ActorMethod<[string, [] | [string]], Article>,
+  /**
+   * / Overwrite current admin credentials with default admin account
+   * / SECURITY: This function requires admin authorization when credentials already exist.
+   * / For first-time setup, it requires the caller to be an admin via AccessControl.
+   */
+  'resetDefaultAdminCredential' : ActorMethod<[], undefined>,
+  'unpublishArticle' : ActorMethod<[string, [] | [string]], Article>,
   'updateArticle' : ActorMethod<
-    [string, string, string, [] | [ExternalBlob]],
+    [string, string, string, [] | [ExternalBlob], [] | [string]],
     Article
   >,
 }

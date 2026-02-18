@@ -1,13 +1,12 @@
 # Specification
 
 ## Summary
-**Goal:** Add a one-time owner/admin bootstrap flow so the first Internet Identity principal can claim admin access to `/admin` when no admin exists, without any username/password.
+**Goal:** Reset and migrate admin authentication to use a single admin username + password pair, update login flow accordingly, and ensure credentials persist across canister upgrades.
 
 **Planned changes:**
-- Backend: add methods to (1) check whether an admin/owner already exists and (2) allow the current authenticated caller to claim/initialize owner/admin access only if none exists yet; otherwise fail without changing state.
-- Backend: ensure the successfully-claimed principal is recognized by existing admin checks (e.g., `isCallerAdmin()` returns true).
-- Frontend `/admin`: when signed out, show an owner-only screen with a “Sign in with Internet Identity” call-to-action using the existing login flow.
-- Frontend `/admin`: when signed in but not admin, show “Claim Owner Access” only if no admin exists; on success, unlock the admin dashboard without a page reload.
-- Frontend `/admin`: when signed in but not admin and an admin already exists, show a clear restricted-access message with no bypass path.
+- Update the backend admin credential model to store/verify a username + password pair and require both in the admin login API while continuing to use the existing session token for admin-gated APIs.
+- Implement a backend credential reset to set admin username to "adminankit" and admin password to "ankits-0812", ensuring credential updates require an existing valid admin session when credentials already exist.
+- Persist admin credentials in stable state across canister upgrades and add a conditional migration to map any existing password-only credential into the new username+password structure.
+- Update the frontend admin login UI and session hook to collect username + password, call the updated login API, and display English error messaging on invalid credentials.
 
-**User-visible outcome:** Visiting `/admin` prompts the owner to sign in with Internet Identity and, if no owner is set yet, claim owner/admin access once; after that, only the claimed principal can access the admin area.
+**User-visible outcome:** Admins can log in using username "adminankit" and password "ankits-0812"; login requires both fields, invalid logins show an English error, admin access continues to use the existing session token, and credentials persist through upgrades.

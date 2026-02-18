@@ -2,11 +2,11 @@
   "kind": "feature_evidence_report",
   "features": [
     {
-      "featureId": "feature-update-the-admin-access-flow-in-the-frontend-so-that-a-site-owner-can-sign-in-with-internet-identity-and-if-needed-claim-owner-admin-access-without-introducing-any-public-username-password-ui",
-      "featureTitle": "Update the /admin access flow in the frontend so that a site owner can sign in with Internet Identity and (if needed) claim owner/admin access, without introducing any public username/password UI.",
+      "featureId": "feature-update-the-frontend-admin-login-ui-and-session-hook-to-accept-a-username-and-password-and-call-the-updated-backend-login-api-accordingly-all-user-facing-text-must-be-in-english",
+      "featureTitle": "Update the frontend admin login UI and session hook to accept a username and password, and call the updated backend login API accordingly. All user-facing text must be in English.",
       "files": [
-        "frontend/src/components/auth/LoginButton.tsx",
-        "frontend/src/components/auth/RequireAdmin.tsx"
+        "frontend/src/components/auth/AdminLoginForm.tsx",
+        "frontend/src/hooks/useAdminSession.ts"
       ],
       "components": [
         "authorization@4.0.0",
@@ -18,7 +18,7 @@
         "github-export-icp-cli@1.0.0"
       ],
       "testIds": [
-        "REQ-16"
+        "REQ-4"
       ],
       "confidence": "high"
     }

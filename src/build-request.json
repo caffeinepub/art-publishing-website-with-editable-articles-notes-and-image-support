@@ -1,70 +1,93 @@
 {
   "kind": "build_request",
-  "title": "Add owner bootstrap flow (no username/password) for admin access to /admin",
+  "title": "Reset admin login credentials to provided username/password",
+  "projectName": "My Collection",
   "priority": "normal",
   "requirements": [
     {
-      "id": "REQ-15",
-      "text": "Implement a one-time backend “owner bootstrap” mechanism that allows the first authenticated Internet Identity principal to claim admin/owner access when no admin has been set yet, and prevents further claims once an admin exists.",
+      "id": "REQ-1",
+      "text": "Update the backend admin credential model to store and verify a single admin username + password pair (not password-only), and update the login API to require both username and password.",
       "target": "backend",
       "source": {
         "messageIds": [
-          "recent-messages-3"
+          "msg-5"
         ],
         "quotes": [
-          "creat admin user id and password and give it to me"
+          "admin username: adminankit • admin password: ankits-0812"
         ]
       },
       "acceptanceCriteria": [
-        "Backend exposes a canister method to check whether any admin/owner exists (e.g., returns boolean).",
-        "Backend exposes a canister method to claim/initialize admin/owner access for the current caller, which succeeds only when no admin exists yet.",
-        "If an admin/owner already exists, the claim/initialize method fails (traps) and does not change admin state.",
-        "After a successful claim, the caller is recognized as admin by existing admin checks (e.g., `isCallerAdmin()` returns true for that caller)."
+        "Backend exposes an admin login method that requires both username and password and returns a session token on success.",
+        "Login attempts with an incorrect username or password fail with an unauthorized error (and do not create a session).",
+        "Existing admin-gated APIs continue to accept the existing session token parameter for authorization as they do now."
       ]
     },
     {
-      "id": "REQ-16",
-      "text": "Update the /admin access flow in the frontend so that a site owner can sign in with Internet Identity and (if needed) claim owner/admin access, without introducing any public username/password UI.",
-      "target": "frontend",
+      "id": "REQ-2",
+      "text": "Implement a backend admin-credential reset using the user-provided values: set admin username to \"adminankit\" and admin password to \"ankits-0812\" via the existing credential initialization/update mechanism, ensuring updates require a valid admin session when credentials already exist.",
+      "target": "backend",
       "source": {
         "messageIds": [
-          "recent-messages-3"
+          "msg-5"
         ],
         "quotes": [
-          "creat admin user id and password and give it to me"
+          "admin username: adminankit • admin password: ankits-0812"
         ]
       },
       "acceptanceCriteria": [
-        "When visiting /admin while not signed in, the page shows an owner-only access screen with a clear call-to-action to “Sign in with Internet Identity” (use the existing Internet Identity hook login flow).",
-        "When signed in but not an admin: if the backend indicates no admin exists yet, the UI shows a “Claim Owner Access” action that calls the backend bootstrap method; on success, the admin dashboard becomes accessible without a page reload.",
-        "When signed in but not an admin and an admin already exists, the UI clearly states that the area is restricted to the site owner and provides no way to bypass it.",
-        "All user-facing text related to this flow is in English and does not mention general user accounts.",
-        "No login/logout controls are added to public (non-admin) site layout/navigation beyond what already exists."
+        "After deployment, the admin can log in successfully using username \"adminankit\" and password \"ankits-0812\".",
+        "If credentials were already set previously, the backend rejects credential updates unless the caller is authorized via an existing valid admin session token (or other existing admin authorization path)."
+      ]
+    },
+    {
+      "id": "REQ-3",
+      "text": "Persist admin credentials across canister upgrades by storing them in stable state and adding a conditional migration to preserve any existing password-only credential data (if present) by mapping it into the new username+password credential structure.",
+      "target": "backend",
+      "source": {
+        "messageIds": [
+          "msg-5"
+        ],
+        "quotes": [
+          "admin username: adminankit • admin password: ankits-0812"
+        ]
+      },
+      "acceptanceCriteria": [
+        "Admin credentials remain intact after a canister upgrade.",
+        "If the canister previously stored only a password credential, the migration preserves it (e.g., by placing it into the new structure) rather than losing it during upgrade.",
+        "No migration is performed/required when deploying to a fresh canister with no prior state."
+      ]
+    },
+    {
+      "id": "REQ-4",
+      "text": "Update the frontend admin login UI and session hook to accept a username and password, and call the updated backend login API accordingly. All user-facing text must be in English.",
+      "target": "frontend",
+      "source": {
+        "messageIds": [
+          "msg-5"
+        ],
+        "quotes": [
+          "admin username: adminankit • admin password: ankits-0812"
+        ]
+      },
+      "acceptanceCriteria": [
+        "Admin login form includes both a Username and Password field and submits both values.",
+        "On invalid credentials, the UI shows an English error message indicating invalid credentials.",
+        "On successful login, the session token is stored as it is today and admin pages become accessible."
       ]
     }
   ],
   "constraints": [
-    "Do not implement username/password authentication; admin access must remain based on Internet Identity principals only.",
-    "Backend must remain a single Motoko actor (all logic in backend/main.mo).",
-    "Do not edit files under frontend/src/components/ui or other immutable paths listed in SYSTEM_CONTEXT."
+    "Backend must remain a single-actor Motoko architecture with logic in backend/main.mo; add backend/migration.mo only as needed for upgrade state changes per the conditional migration policy.",
+    "Do not edit frontend files under frontend/src/components/ui or any paths listed as immutable in SYSTEM_CONTEXT.",
+    "Use English for any user-facing text."
   ],
   "nonGoals": [
-    "Providing an actual admin username and password to the user.",
-    "Adding third-party authentication providers (Google, GitHub, Auth0, etc.).",
-    "Building multi-user account management features beyond owner/admin bootstrapping."
+    "Do not add third-party authentication providers (only existing auth mechanisms are in scope).",
+    "Do not add new admin roles or multiple admin accounts; keep a single admin credential pair.",
+    "Do not introduce external databases or non-Motoko backend services."
   ],
   "imageRequirements": {
     "required": [],
     "edits": []
-  },
-  "userProfileUpdate": {
-    "goalsToAdd": [],
-    "goalsToRemove": [],
-    "preferencesToAdd": [],
-    "preferencesToRemove": [],
-    "miscToAdd": [],
-    "miscToRemove": [],
-    "fieldsToSet": {},
-    "fieldsToDelete": []
   }
 }

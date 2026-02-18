@@ -1,6 +1,7 @@
 import { useQuery, useMutation, useQueryClient } from '@tanstack/react-query';
 import { useActor } from './useActor';
-import { Article, UserProfile } from '../backend';
+import { useAdminSession } from './useAdminSession';
+import { Article } from '../backend';
 import { ExternalBlob } from '../backend';
 
 export function useIsCallerAdmin() {
@@ -16,62 +17,29 @@ export function useIsCallerAdmin() {
   });
 }
 
-export function useGetCallerUserProfile() {
-  const { actor, isFetching: actorFetching } = useActor();
-
-  const query = useQuery<UserProfile | null>({
-    queryKey: ['currentUserProfile'],
-    queryFn: async () => {
-      if (!actor) throw new Error('Actor not available');
-      return actor.getCallerUserProfile();
-    },
-    enabled: !!actor && !actorFetching,
-    retry: false,
-  });
-
-  return {
-    ...query,
-    isLoading: actorFetching || query.isLoading,
-    isFetched: !!actor && query.isFetched,
-  };
-}
-
-export function useSaveCallerUserProfile() {
-  const { actor } = useActor();
-  const queryClient = useQueryClient();
-
-  return useMutation({
-    mutationFn: async (profile: UserProfile) => {
-      if (!actor) throw new Error('Actor not available');
-      return actor.saveCallerUserProfile(profile);
-    },
-    onSuccess: () => {
-      queryClient.invalidateQueries({ queryKey: ['currentUserProfile'] });
-    },
-  });
-}
-
 export function useGetAllArticles() {
   const { actor, isFetching } = useActor();
+  const { token } = useAdminSession();
 
   return useQuery<Article[]>({
     queryKey: ['allArticles'],
     queryFn: async () => {
       if (!actor) return [];
-      return actor.getPublishedArticles();
+      return actor.getAllArticles(token);
     },
-    enabled: !!actor && !isFetching,
+    enabled: !!actor && !isFetching && !!token,
   });
 }
 
 export function useGetArticleById(id: string) {
   const { actor, isFetching } = useActor();
+  const { token } = useAdminSession();
 
   return useQuery<Article | null>({
     queryKey: ['article', id],
     queryFn: async () => {
       if (!actor || !id) return null;
-      return actor.getArticleById(id);
+      return actor.getArticleById(id, token);
     },
     enabled: !!actor && !isFetching && !!id,
   });
@@ -79,6 +47,7 @@ export function useGetArticleById(id: string) {
 
 export function useCreateArticle() {
   const { actor } = useActor();
+  const { token } = useAdminSession();
   const queryClient = useQueryClient();
 
   return useMutation({
@@ -92,7 +61,7 @@ export function useCreateArticle() {
       coverImage: ExternalBlob | null;
     }) => {
       if (!actor) throw new Error('Actor not available');
-      return actor.createArticle(title, body, coverImage);
+      return actor.createArticle(title, body, coverImage, token);
     },
     onSuccess: () => {
       queryClient.invalidateQueries({ queryKey: ['allArticles'] });
@@ -103,6 +72,7 @@ export function useCreateArticle() {
 
 export function useUpdateArticle() {
   const { actor } = useActor();
+  const { token } = useAdminSession();
   const queryClient = useQueryClient();
 
   return useMutation({
@@ -118,7 +88,7 @@ export function useUpdateArticle() {
       coverImage: ExternalBlob | null;
     }) => {
       if (!actor) throw new Error('Actor not available');
-      return actor.updateArticle(id, title, body, coverImage);
+      return actor.updateArticle(id, title, body, coverImage, token);
     },
     onSuccess: (_, variables) => {
       queryClient.invalidateQueries({ queryKey: ['allArticles'] });
@@ -130,12 +100,13 @@ export function useUpdateArticle() {
 
 export function usePublishArticle() {
   const { actor } = useActor();
+  const { token } = useAdminSession();
   const queryClient = useQueryClient();
 
   return useMutation({
     mutationFn: async (id: string) => {
       if (!actor) throw new Error('Actor not available');
-      return actor.publishArticle(id);
+      return actor.publishArticle(id, token);
     },
     onSuccess: (_, id) => {
       queryClient.invalidateQueries({ queryKey: ['allArticles'] });
@@ -147,12 +118,13 @@ export function usePublishArticle() {
 
 export function useUnpublishArticle() {
   const { actor } = useActor();
+  const { token } = useAdminSession();
   const queryClient = useQueryClient();
 
   return useMutation({
     mutationFn: async (id: string) => {
       if (!actor) throw new Error('Actor not available');
-      return actor.unpublishArticle(id);
+      return actor.unpublishArticle(id, token);
     },
     onSuccess: (_, id) => {
       queryClient.invalidateQueries({ queryKey: ['allArticles'] });

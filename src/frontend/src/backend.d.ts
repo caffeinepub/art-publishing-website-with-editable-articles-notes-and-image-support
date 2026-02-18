@@ -24,9 +24,6 @@ export interface Article {
     updatedAt: Time;
 }
 export type Time = bigint;
-export interface UserProfile {
-    name: string;
-}
 export enum ContentStatus {
     published = "published",
     draft = "draft"
@@ -38,15 +35,21 @@ export enum UserRole {
 }
 export interface backendInterface {
     assignCallerUserRole(user: Principal, role: UserRole): Promise<void>;
-    createArticle(title: string, body: string, coverImage: ExternalBlob | null): Promise<Article>;
-    getArticleById(id: string): Promise<Article | null>;
-    getCallerUserProfile(): Promise<UserProfile | null>;
+    createArticle(title: string, body: string, coverImage: ExternalBlob | null, sessionToken: string | null): Promise<Article>;
+    getAllArticles(sessionToken: string | null): Promise<Array<Article>>;
+    getArticleById(id: string, sessionToken: string | null): Promise<Article | null>;
     getCallerUserRole(): Promise<UserRole>;
     getPublishedArticles(): Promise<Array<Article>>;
-    getUserProfile(user: Principal): Promise<UserProfile | null>;
     isCallerAdmin(): Promise<boolean>;
-    publishArticle(id: string): Promise<Article>;
-    saveCallerUserProfile(profile: UserProfile): Promise<void>;
-    unpublishArticle(id: string): Promise<Article>;
-    updateArticle(id: string, title: string, body: string, coverImage: ExternalBlob | null): Promise<Article>;
+    login(username: string, password: string): Promise<string>;
+    logout(sessionToken: string): Promise<void>;
+    publishArticle(id: string, sessionToken: string | null): Promise<Article>;
+    /**
+     * / Overwrite current admin credentials with default admin account
+     * / SECURITY: This function requires admin authorization when credentials already exist.
+     * / For first-time setup, it requires the caller to be an admin via AccessControl.
+     */
+    resetDefaultAdminCredential(): Promise<void>;
+    unpublishArticle(id: string, sessionToken: string | null): Promise<Article>;
+    updateArticle(id: string, title: string, body: string, coverImage: ExternalBlob | null, sessionToken: string | null): Promise<Article>;
 }

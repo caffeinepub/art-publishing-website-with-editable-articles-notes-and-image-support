@@ -1,38 +1,31 @@
 {
   "kind": "implementation_plan",
   "version": "1.0",
-  "title": "Owner bootstrap admin access flow for /admin using Internet Identity",
+  "title": "Update admin login UI to use username + password",
   "requirements": [
     {
-      "id": "REQ-16",
-      "summary": "Revise /admin guard UI to support Internet Identity sign-in and a one-time owner/admin claim action (when no admin exists), without adding username/password UI or changing public navigation.",
+      "id": "REQ-4",
+      "summary": "Update admin login UI and admin session hook to submit both username and password to the backend login method, keeping session-token storage behavior unchanged and all text in English.",
       "acceptanceCriteria": [
-        "When visiting /admin while not signed in, the page shows an owner-only access screen with a clear call-to-action to “Sign in with Internet Identity” (use the existing Internet Identity hook login flow).",
-        "When signed in but not an admin: if the backend indicates no admin exists yet, the UI shows a “Claim Owner Access” action that calls the backend bootstrap method; on success, the admin dashboard becomes accessible without a page reload.",
-        "When signed in but not an admin and an admin already exists, the UI clearly states that the area is restricted to the site owner and provides no way to bypass it.",
-        "All user-facing text related to this flow is in English and does not mention general user accounts.",
-        "No login/logout controls are added to public (non-admin) site layout/navigation beyond what already exists."
+        "Admin login form includes both a Username and Password field and submits both values.",
+        "On invalid credentials, the UI shows an English error message indicating invalid credentials.",
+        "On successful login, the session token is stored as it is today and admin pages become accessible."
       ],
       "file_operations": [
         {
-          "path": "frontend/src/backend.d.ts",
+          "path": "frontend/src/components/auth/AdminLoginForm.tsx",
           "operation": "modify",
-          "description": "Extend the typed backend interface with the new owner-bootstrap capabilities needed by the UI (a boolean check for whether an owner/admin exists, and a claim/initialize call for the current caller). Ensure names/signatures align with the backend implementation once added."
+          "description": "Replace the password-only admin login form with a username + password form (two inputs) and update English helper/placeholder text accordingly; submit both values via the session hook."
         },
         {
-          "path": "frontend/src/hooks/useAdminContent.ts",
+          "path": "frontend/src/hooks/useAdminSession.ts",
           "operation": "modify",
-          "description": "Add React Query hooks for the owner-bootstrap flow (e.g., a query to check whether an owner/admin exists and a mutation to claim owner access). On successful claim, invalidate/refetch the existing admin-status query (useIsCallerAdmin) so the dashboard becomes accessible without a page reload."
-        },
-        {
-          "path": "frontend/src/components/auth/LoginButton.tsx",
-          "operation": "modify",
-          "description": "Implement a focused “Sign in with Internet Identity” button component using the existing useInternetIdentity hook login flow (selected component: authorization). Verify the component's usage instructions before implementing."
+          "description": "Change the login function signature to accept (username, password) and call the backend login method with both parameters; preserve existing localStorage session token storage/expiration logic and keep an English 'Invalid credentials' message for unauthorized failures."
         },
         {
           "path": "frontend/src/components/auth/RequireAdmin.tsx",
           "operation": "modify",
-          "description": "Replace the current static access-denied alert with the full owner access flow: (1) if not signed in, show an owner-only screen plus the Internet Identity sign-in CTA (use LoginButton + useInternetIdentity from the authorization component; verify the component's usage instructions before implementing); (2) if signed in but not admin, query whether an admin exists and either show a “Claim Owner Access” action (when none exists) or a clear restricted message (when one exists); (3) after successful claim, trigger query invalidation so children render immediately without reload. Handle trapped/unauthorized backend errors with clear English messaging."
+          "description": "Ensure RequireAdmin continues to gate admin-only UI using the updated AdminLoginForm/session hook API (no behavior change beyond supporting username + password login)."
         }
       ]
     }

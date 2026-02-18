@@ -1,32 +1,45 @@
 {
   "kind": "spec_vs_diff_report",
   "version": "1.0",
-  "generatedAt": "2026-02-15T20:20:41.904Z",
-  "summary": "Frontend admin-guard UI was updated to show an owner-only sign-in prompt for /admin and a restricted message for non-admin authenticated users. However, the one-time owner bootstrap mechanism (backend methods + frontend “Claim Owner Access” flow) is not present in the provided diff summary.",
+  "generatedAt": "2026-02-18T12:04:29.225Z",
+  "summary": "Frontend admin login form and session hook were updated to collect username+password and call `actor.login(username, password)`. A backend migration module was added to map an old password-only credential (`?Text`) into a new `{username; password}` structure using username `adminankit`. However, the diff summary does not show (due to truncation / lack of evidence) the required backend login API changes, credential verification logic, stable persistence wiring, or the explicit reset to password `ankits-0812` via the initialization/update mechanism with proper authorization checks.",
   "missing_requirements": [
     {
-      "id": "REQ-15",
-      "requirement": "Implement a one-time backend owner bootstrap mechanism: expose a method to check whether an admin exists and a method to claim/initialize the caller as admin only when no admin exists; trap if an admin already exists; ensure caller becomes admin after successful claim.",
-      "reason": "No backend changes are shown at all (no modifications to backend/main.mo or any canister methods), so the required bootstrap methods and admin-state logic cannot be verified as implemented.",
+      "id": "REQ-1",
+      "requirement": "Update the backend admin credential model to store and verify a single admin username + password pair (not password-only), and update the login API to require both username and password.",
+      "reason": "Frontend calls `actor.login(username, password)`, but the backend diff excerpt for `backend/main.mo` does not include any evidence of a `login` method signature change, username+password verification, or unauthorized failure behavior. The shown backend changes are about article authorization and migration wiring only.",
       "evidence": [
-        "<file-diff>: Modified files list contains only frontend files; no backend/main.mo changes shown."
+        "backend/main.mo (truncated)",
+        "frontend/src/hooks/useAdminSession.ts"
       ]
     },
     {
-      "id": "REQ-16",
-      "requirement": "When signed in but not an admin: if backend indicates no admin exists yet, show a “Claim Owner Access” action that calls the backend bootstrap method; on success, admin dashboard becomes accessible without page reload.",
-      "reason": "RequireAdmin.tsx only shows an \"Access Restricted\" message when authenticated but not admin; it does not query whether an admin exists, does not display a “Claim Owner Access” action, and does not call any bootstrap method.",
+      "id": "REQ-2",
+      "requirement": "Implement a backend admin-credential reset using the user-provided values: set admin username to \"adminankit\" and admin password to \"ankits-0812\" via the existing credential initialization/update mechanism, ensuring updates require a valid admin session when credentials already exist.",
+      "reason": "The only explicit credential value in the diff is in migration, which sets username to `adminankit` but reuses the old stored password (does not set `ankits-0812`). There is no visible backend code showing a reset/initialization path that sets password to `ankits-0812` or enforces authorization for updates when credentials already exist.",
       "evidence": [
-        "frontend/src/components/auth/RequireAdmin.tsx: Authenticated but not admin branch only renders Access Restricted card; no claim action or admin-exists check."
+        "backend/migration.mo",
+        "backend/main.mo (truncated)"
+      ]
+    },
+    {
+      "id": "REQ-3",
+      "requirement": "Persist admin credentials across canister upgrades by storing them in stable state and adding a conditional migration to preserve any existing password-only credential data (if present) by mapping it into the new username+password credential structure.",
+      "reason": "A migration module exists that maps old `?Text` password into a new `{username; password}` structure. But the diff summary does not show evidence that the new credential structure is stored in stable state in `backend/main.mo`, nor that the migration is conditional in the sense of only running/being needed on upgrades vs fresh deploy (beyond the `null` case handling).",
+      "evidence": [
+        "backend/migration.mo",
+        "backend/main.mo (truncated)"
       ]
     }
   ],
   "hallucinated_features": [],
-  "confidence": 0.78,
+  "confidence": 0.56,
   "changed_files": [
+    "backend/main.mo",
+    "backend/migration.mo",
     "frontend-file-summaries.txt",
-    "frontend/src/components/auth/LoginButton.tsx",
-    "frontend/src/components/auth/RequireAdmin.tsx",
+    "frontend/src/components/auth/AdminLoginForm.tsx",
+    "frontend/src/hooks/useAdminSession.ts",
     "project_state.json"
   ]
 }
