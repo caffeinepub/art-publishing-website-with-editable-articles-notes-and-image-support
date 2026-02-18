@@ -1,10 +1,11 @@
 {
   "schemaVersion": "1.0.0",
-  "projectStateVersion": 7,
+  "projectStateVersion": 9,
   "summary": "Website for publishing articles (no notes), with an easy editor for updating content and support for adding images; remove public login and ensure only the site owner can publish.",
   "architectural_notes": [
     "Scope change: remove the Notes content type from the website; focus on Articles only (public browsing/reading and admin editing).",
-    "Scope/behavior change: remove public login/auth; only the site owner can access publishing/editor tools, and visitors can only view published Articles."
+    "Scope/behavior change: remove public login/auth; only the site owner can access publishing/editor tools, and visitors can only view published Articles.",
+    "Owner-only admin access should be secured via explicit credentials (admin user ID + password) for /admin, while keeping all auth controls hidden from public pages."
   ],
   "known_issues": [],
   "isFixRequest": false,
@@ -104,6 +105,14 @@
         "REQ-14"
       ],
       "version": 1
+    },
+    {
+      "id": "feature-update-the-admin-access-flow-in-the-frontend-so-that-a-site-owner-can-sign-in-with-internet-identity-and-if-needed-claim-owner-admin-access-without-introducing-any-public-username-password-ui",
+      "title": "Update the /admin access flow in the frontend so that a site owner can sign in with Internet Identity and (if needed) claim owner/admin access, without introducing any public username/password UI.",
+      "reqIds": [
+        "REQ-16"
+      ],
+      "version": 1
     }
   ],
   "new_feature_requests": [
@@ -145,6 +154,20 @@
       "id": "AR-10",
       "summary": "Remove the login system/public authentication and restrict publishing/admin editing access to the site owner only (visitors can only read published articles).",
       "reqIds": [],
+      "status": "pending"
+    },
+    {
+      "id": "AR-11",
+      "summary": "Add an owner/admin login mechanism (admin user ID + password) to access the /admin editor, while keeping the public site free of authentication UI.",
+      "reqIds": [],
+      "status": "pending"
+    },
+    {
+      "id": "AR-12",
+      "summary": "Implement a one-time backend “owner bootstrap” mechanism that allows the first authenticated Internet Identity principal to claim admin/owner access when no admin has been set yet, and prevents further claims once an admin exists.",
+      "reqIds": [
+        "REQ-15"
+      ],
       "status": "pending"
     }
   ],

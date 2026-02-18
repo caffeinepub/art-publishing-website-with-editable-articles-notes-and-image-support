@@ -2,12 +2,11 @@
   "kind": "feature_evidence_report",
   "features": [
     {
-      "featureId": "feature-remove-all-public-facing-login-logout-and-profile-setup-ux-from-the-site-layout-so-visitors-cannot-see-or-use-any-authentication-controls-no-login-button-no-logout-button-no-profile-setup-modal",
-      "featureTitle": "Remove all public-facing login/logout and profile-setup UX from the site layout so visitors cannot see or use any authentication controls (no login button, no logout button, no profile setup modal).",
+      "featureId": "feature-update-the-admin-access-flow-in-the-frontend-so-that-a-site-owner-can-sign-in-with-internet-identity-and-if-needed-claim-owner-admin-access-without-introducing-any-public-username-password-ui",
+      "featureTitle": "Update the /admin access flow in the frontend so that a site owner can sign in with Internet Identity and (if needed) claim owner/admin access, without introducing any public username/password UI.",
       "files": [
         "frontend/src/components/auth/LoginButton.tsx",
-        "frontend/src/components/auth/ProfileSetupModal.tsx",
-        "frontend/src/components/layout/SiteLayout.tsx"
+        "frontend/src/components/auth/RequireAdmin.tsx"
       ],
       "components": [
         "authorization@4.0.0",
@@ -19,53 +18,7 @@
         "github-export-icp-cli@1.0.0"
       ],
       "testIds": [
-        "REQ-12"
-      ],
-      "confidence": "high"
-    },
-    {
-      "featureId": "feature-keep-the-admin-editor-pages-protected-so-that-only-the-site-owner-can-access-create-edit-publish-unpublish-actions-non-owners-must-not-be-able-to-publish-articles-or-upload-images-even-if-they-discover-admin-routes",
-      "featureTitle": "Keep the admin/editor pages protected so that only the site owner can access create/edit/publish/unpublish actions; non-owners must not be able to publish articles or upload images even if they discover admin routes.",
-      "files": [
-        "frontend/src/components/admin/PublishToggle.tsx",
-        "frontend/src/components/auth/RequireAdmin.tsx",
-        "frontend/src/components/editor/ImageUploadPanel.tsx",
-        "frontend/src/pages/admin/AdminDashboardPage.tsx",
-        "frontend/src/pages/admin/ContentEditorPage.tsx"
-      ],
-      "components": [
-        "authorization@4.0.0",
-        "blob-storage@4.0.0",
-        "core-infrastructure@1.0.2",
-        "shadcn-ui@1.0.0",
-        "build-template-react@1.0.0",
-        "initial-app@1.0.0",
-        "github-export-icp-cli@1.0.0"
-      ],
-      "testIds": [
-        "REQ-13"
-      ],
-      "confidence": "high"
-    },
-    {
-      "featureId": "feature-adjust-admin-gating-ui-text-to-reflect-owner-only-access-and-remove-any-implication-that-the-site-supports-general-user-accounts-use-english-text",
-      "featureTitle": "Adjust admin gating UI text to reflect owner-only access and remove any implication that the site supports general user accounts (use English text).",
-      "files": [
-        "frontend/src/components/auth/RequireAdmin.tsx",
-        "frontend/src/pages/admin/AdminDashboardPage.tsx",
-        "frontend/src/pages/admin/ContentEditorPage.tsx"
-      ],
-      "components": [
-        "authorization@4.0.0",
-        "blob-storage@4.0.0",
-        "core-infrastructure@1.0.2",
-        "shadcn-ui@1.0.0",
-        "build-template-react@1.0.0",
-        "initial-app@1.0.0",
-        "github-export-icp-cli@1.0.0"
-      ],
-      "testIds": [
-        "REQ-14"
+        "REQ-16"
       ],
       "confidence": "high"
     }

@@ -1,72 +1,57 @@
 {
   "kind": "build_request",
-  "title": "Remove public login UI and restrict publishing to the site owner only",
+  "title": "Add owner bootstrap flow (no username/password) for admin access to /admin",
   "priority": "normal",
   "requirements": [
     {
-      "id": "REQ-12",
-      "text": "Remove all public-facing login/logout and profile-setup UX from the site layout so visitors cannot see or use any authentication controls (no login button, no logout button, no profile setup modal).",
-      "target": "frontend",
+      "id": "REQ-15",
+      "text": "Implement a one-time backend “owner bootstrap” mechanism that allows the first authenticated Internet Identity principal to claim admin/owner access when no admin has been set yet, and prevents further claims once an admin exists.",
+      "target": "backend",
       "source": {
         "messageIds": [
-          "msg-1"
+          "recent-messages-3"
         ],
         "quotes": [
-          "remove login feature and only i will publish it's artical and image"
+          "creat admin user id and password and give it to me"
         ]
       },
       "acceptanceCriteria": [
-        "The header navigation in SiteLayout no longer renders the LoginButton component.",
-        "ProfileSetupModal is not rendered on public pages (or at all).",
-        "No user-facing page shows buttons/links labeled \"Login\" or \"Logout\" to general visitors."
+        "Backend exposes a canister method to check whether any admin/owner exists (e.g., returns boolean).",
+        "Backend exposes a canister method to claim/initialize admin/owner access for the current caller, which succeeds only when no admin exists yet.",
+        "If an admin/owner already exists, the claim/initialize method fails (traps) and does not change admin state.",
+        "After a successful claim, the caller is recognized as admin by existing admin checks (e.g., `isCallerAdmin()` returns true for that caller)."
       ]
     },
     {
-      "id": "REQ-13",
-      "text": "Keep the admin/editor pages protected so that only the site owner can access create/edit/publish/unpublish actions; non-owners must not be able to publish articles or upload images even if they discover admin routes.",
-      "target": "both",
-      "source": {
-        "messageIds": [
-          "msg-1"
-        ],
-        "quotes": [
-          "remove login feature and not anyone can publish articals",
-          "remove login feature and only i will publish it's artical and image"
-        ]
-      },
-      "acceptanceCriteria": [
-        "All backend content-mutation methods (createArticle, updateArticle, publishArticle, unpublishArticle) continue to reject non-owner callers with an unauthorized error.",
-        "Admin UI routes (/admin, /admin/articles/new, /admin/articles/:id/edit) remain inaccessible to non-owners (they see an access denied / authentication required experience and cannot reach editing controls).",
-        "Image upload functionality used by the editor cannot successfully upload/store images for non-owner callers."
-      ]
-    },
-    {
-      "id": "REQ-14",
-      "text": "Adjust admin gating UI text to reflect owner-only access and remove any implication that the site supports general user accounts (use English text).",
+      "id": "REQ-16",
+      "text": "Update the /admin access flow in the frontend so that a site owner can sign in with Internet Identity and (if needed) claim owner/admin access, without introducing any public username/password UI.",
       "target": "frontend",
       "source": {
         "messageIds": [
-          "msg-1"
+          "recent-messages-3"
         ],
         "quotes": [
-          "remove login feature and only i will publish it's artical and image"
+          "creat admin user id and password and give it to me"
         ]
       },
       "acceptanceCriteria": [
-        "Admin guard screens/messages refer to \"Owner access\" or \"Admin access\" and do not instruct general visitors to create a profile.",
-        "All user-facing authentication/access-denied strings shown by admin gating components are in English."
+        "When visiting /admin while not signed in, the page shows an owner-only access screen with a clear call-to-action to “Sign in with Internet Identity” (use the existing Internet Identity hook login flow).",
+        "When signed in but not an admin: if the backend indicates no admin exists yet, the UI shows a “Claim Owner Access” action that calls the backend bootstrap method; on success, the admin dashboard becomes accessible without a page reload.",
+        "When signed in but not an admin and an admin already exists, the UI clearly states that the area is restricted to the site owner and provides no way to bypass it.",
+        "All user-facing text related to this flow is in English and does not mention general user accounts.",
+        "No login/logout controls are added to public (non-admin) site layout/navigation beyond what already exists."
       ]
     }
   ],
   "constraints": [
-    "Do not edit files under frontend/src/components/ui (read-only shadcn components).",
-    "Do not edit immutable paths: frontend/src/hooks/useInternetIdentity.ts, frontend/src/hooks/useInternetIdentity.tsx, frontend/src/hooks/useActor.ts, frontend/src/main.tsx.",
-    "Backend must remain a single Motoko actor in backend/main.mo; only add backend/migration.mo changes if a stable-state upgrade is required."
+    "Do not implement username/password authentication; admin access must remain based on Internet Identity principals only.",
+    "Backend must remain a single Motoko actor (all logic in backend/main.mo).",
+    "Do not edit files under frontend/src/components/ui or other immutable paths listed in SYSTEM_CONTEXT."
   ],
   "nonGoals": [
-    "Adding third-party authentication providers (only Internet Identity is available).",
-    "Adding multi-user roles, invitations, or a public registration system.",
-    "Changing the public content model beyond the login/publishing restrictions (Articles-only remains as-is)."
+    "Providing an actual admin username and password to the user.",
+    "Adding third-party authentication providers (Google, GitHub, Auth0, etc.).",
+    "Building multi-user account management features beyond owner/admin bootstrapping."
   ],
   "imageRequirements": {
     "required": [],
